@@ -44,16 +44,49 @@ class Bluetooth {
 }
 
 class BluetoothEvent {
-  BluetoothEvent({this.when, this.repeatedMinutes});
+  BluetoothEvent({this.when, this.repeatedMinutes, this.index});
 
   DateTime? when;
   int? repeatedMinutes;
+  int? index;
 
   Map toJson() => {
         'when': when.toString(),
         'repeatedMinutes': repeatedMinutes,
+        'index': index,
       };
   BluetoothEvent.fromJson(Map json)
       : when = DateTime.parse(json['when']),
-        repeatedMinutes = json['repeatedMinutes'];
+        repeatedMinutes = json['repeatedMinutes'],
+        index = json['index'];
+}
+
+int convertSectorToIndex(String sector) {
+  switch (sector) {
+    case "Утро":
+      return 0;
+    case "Вечер":
+      return 1;
+    case "День":
+      return 2;
+    case "Ночь":
+      return 3;
+    default:
+      return 0;
+  }
+}
+
+String convertIndexToSector(int index) {
+  switch (index) {
+    case 0:
+      return "Утро";
+    case 1:
+      return "Вечер";
+    case 2:
+      return "День";
+    case 3:
+      return "Ночь";
+    default:
+      return "Утро";
+  }
 }

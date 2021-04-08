@@ -54,7 +54,7 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
                       title: Text("Приём лекарств",
                           style: TextStyle(fontSize: 20)),
                       subtitle: Text(
-                          "Каждый день в ${DateFormat("Hm").format(e.when!)}, открыто ${e.repeatedMinutes} мин",
+                          "Каждый день в ${DateFormat("Hm").format(e.when!)}, '${convertIndexToSector(e.index!)}', открыто ${e.repeatedMinutes} мин",
                           style: TextStyle(fontSize: 16)),
                       leading: Icon(Icons.medical_services, size: 40),
                       trailing: IconButton(
@@ -523,6 +523,7 @@ class _EventSelectorState extends State<EventSelector> {
                     when: DateTime(now.year, now.month, now.day,
                         medicineTime!.hour, medicineTime!.minute, 0),
                     repeatedMinutes: medicineRepeat,
+                    index: convertSectorToIndex(sectorDropdown),
                   ),
                 );
                 Bluetooth.saveToPrefs();

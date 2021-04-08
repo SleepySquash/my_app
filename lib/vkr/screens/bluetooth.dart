@@ -54,11 +54,26 @@ class _BluetoothDeviceScreenState extends State<BluetoothDeviceScreen> {
                 now.millisecondsSinceEpoch -
                         Bluetooth.since!.millisecondsSinceEpoch <
                     1000)) {
-              if (string == "h0" || string == "h0\n") {
-                setState(() {
-                  Bluetooth.hallEffect = false;
-                });
-                Notifications.fire("Уведомление", "Лекарства приняты");
+              if (string.startsWith("h0")) {
+                Notifications.fire(
+                  "Отсек '${convertIndexToSector(0)}'",
+                  "Лекарства приняты",
+                );
+              } else if (string.startsWith("h1")) {
+                Notifications.fire(
+                  "Отсек '${convertIndexToSector(1)}'",
+                  "Лекарства приняты",
+                );
+              } else if (string.startsWith("h2")) {
+                Notifications.fire(
+                  "Отсек '${convertIndexToSector(2)}'",
+                  "Лекарства приняты",
+                );
+              } else if (string.startsWith("h3")) {
+                Notifications.fire(
+                  "Отсек '${convertIndexToSector(3)}'",
+                  "Лекарства приняты",
+                );
               } else if (string == "h1" || string == "h1\n") {
                 setState(() {
                   Bluetooth.hallEffect = true;
@@ -235,13 +250,17 @@ void sendBluetoothEvents() {
   if (Bluetooth.events.length == 0) result = "e";
   for (BluetoothEvent e in Bluetooth.events)
     result +=
-        "e${e.when!.hour.toString().padLeft(2, '0')}${e.when!.minute.toString().padLeft(2, '0')}${e.repeatedMinutes.toString().padLeft(2, '0')}";
+        "e${e.index}${e.when!.hour.toString().padLeft(2, '0')}${e.when!.minute.toString().padLeft(2, '0')}${e.repeatedMinutes.toString().padLeft(2, '0')}";
   result += "\n";
   Bluetooth.characteristic!.write(utf8.encode(result));
 
   Notifications.cancelAll();
   for (BluetoothEvent e in Bluetooth.events)
-    Notifications.schedule("Событие", "Пора принимать лекарства", e.when!);
+    Notifications.schedule(
+      "Пора принимать лекарства",
+      "Отсек '${convertIndexToSector(e.index!)}', у вас ${e.repeatedMinutes} минут!",
+      e.when!,
+    );
 }
 
 class EventsScreen extends StatefulWidget {
@@ -259,7 +278,7 @@ class _EventsScreenState extends State<EventsScreen> {
               children: Bluetooth.events
                   .map(
                     (e) => ListTile(
-                      title: Text("Событие"),
+                      title: Text("Событие на отсек №${e.index}"),
                       subtitle: Text(
                           "${DateFormat("hh:mm").format(e.when!)} с периодом ${e.repeatedMinutes} мин"),
                       leading: Icon(Icons.event),
@@ -297,18 +316,32 @@ class _EventsScreenState extends State<EventsScreen> {
               },
             );
             if (minutes != null) {
-              DateTime now = DateTime.now();
-              setState(() {
-                Bluetooth.events.add(
-                  BluetoothEvent(
-                    when: DateTime(now.year, now.month, now.day,
-                        selectedTime.hour, selectedTime.minute, 0),
-                    repeatedMinutes: minutes,
-                  ),
-                );
-              });
-              Bluetooth.saveToPrefs();
-              sendBluetoothEvents();
+              int? index = await showDialog<int>(
+                context: context,
+                builder: (BuildContext context) {
+                  return new NumberPickerDialog.integer(
+                    minValue: 0,
+                    maxValue: 3,
+                    title: new Text("Индекс"),
+                    initialIntegerValue: 0,
+                  );
+                },
+              );
+              if (index != null) {
+                DateTime now = DateTime.now();
+                setState(() {
+                  Bluetooth.events.add(
+                    BluetoothEvent(
+                      when: DateTime(now.year, now.month, now.day,
+                          selectedTime.hour, selectedTime.minute, 0),
+                      repeatedMinutes: minutes,
+                      index: index,
+                    ),
+                  );
+                });
+                Bluetooth.saveToPrefs();
+                sendBluetoothEvents();
+              }
             }
           }
         },
