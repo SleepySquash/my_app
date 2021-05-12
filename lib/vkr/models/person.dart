@@ -1,11 +1,14 @@
 class Person {
   static String? phone;
+  static String? id;
 
   static Map toJson() => {
         'phone': Person.phone,
+        'id': Person.id,
       };
   static void fromJson(Map json) {
     phone = json['phone'];
+    id = json['id'];
   }
 
   static bool isLoggedIn() {

@@ -6,7 +6,7 @@ import 'dart:convert';
 
 class Bluetooth {
   static bool connected = false;
-  static ScanResult? result;
+  static BluetoothDevice? device;
   static BluetoothService? service;
   static BluetoothCharacteristic? characteristic;
 

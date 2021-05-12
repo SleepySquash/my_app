@@ -38,7 +38,7 @@ void awesomeDialogQuestion(
           AnimatedButton(
             pressEvent: () {
               dialog?.dissmiss();
-              onClose!();
+              if (onClose != null) onClose();
             },
             text: 'Нет',
             color: Colors.red,
@@ -79,6 +79,46 @@ void awesomeDialogError(
             },
             text: 'Понятно',
             color: Colors.red,
+          ),
+        ],
+      ),
+    ),
+  )..show();
+}
+
+void awesomeDialogInfo(BuildContext context, String title, String description,
+    {Function? onPress, DialogType? dialogType}) {
+  AwesomeDialog? dialog;
+  dialog = AwesomeDialog(
+    context: context,
+    width: 450,
+    headerAnimationLoop: false,
+    dialogType: dialogType ?? DialogType.INFO,
+    onDissmissCallback: () {
+      onPress?.call();
+    },
+    body: Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Column(
+        children: [
+          Text(
+            title,
+            style: Theme.of(context).textTheme.headline4,
+            textAlign: TextAlign.center,
+          ),
+          SizedBox(height: 10),
+          Text(
+            description,
+            style: Theme.of(context).textTheme.headline6,
+            textAlign: TextAlign.center,
+          ),
+          SizedBox(height: 15),
+          AnimatedButton(
+            pressEvent: () {
+              dialog?.dissmiss();
+            },
+            text: 'Понятно',
+            color: Colors.green,
           ),
         ],
       ),

@@ -1,4 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:my_app/vkr/screens/tests/draw.dart';
+import 'package:my_app/vkr/screens/tests/reporting.dart';
+import 'package:my_app/vkr/screens/tests/tapping.dart';
+import 'package:my_app/vkr/screens/tests/textrepeat.dart';
+import 'package:my_app/vkr/screens/tests/voice.dart';
 
 class TestsAppBar extends StatelessWidget implements PreferredSizeWidget {
   @override
@@ -21,25 +26,66 @@ class TestsScreen extends StatelessWidget {
     return ListView(
       children: [
         ListTile(
-          leading: Icon(Icons.looks, size: 44.0),
-          title: Text('Постукивание', style: TextStyle(fontSize: 24)),
-          subtitle: Text(
-              'Тест на скорость постукивания по экрану правой и левой рукой',
+          leading: Icon(Icons.article, size: 44.0),
+          title: Text('Самочувствие', style: TextStyle(fontSize: 24)),
+          subtitle: Text('Напишите подробный отчёт о собственном самочувствии',
               style: TextStyle(fontSize: 16)),
-          trailing: Icon(Icons.arrow_right, size: 44),
+          trailing: Icon(Icons.arrow_forward, size: 44),
+          onTap: () => Navigator.of(context).push(
+              MaterialPageRoute(builder: (context) => ReportTestScreen())),
+        ),
+        ListTile(
+          leading: Icon(Icons.dry, size: 44.0),
+          title: Text('Постукивание на количество',
+              style: TextStyle(fontSize: 24)),
+          subtitle: Text(
+              'Тест на количество постукиваний по экрану правой и левой рукой',
+              style: TextStyle(fontSize: 16)),
+          trailing: Icon(Icons.arrow_forward, size: 44),
+          isThreeLine: true,
+          onTap: () => Navigator.of(context).push(
+              MaterialPageRoute(builder: (context) => TappingTestScreen())),
+        ),
+        ListTile(
+          leading: Icon(Icons.dry_outlined, size: 44.0),
+          title: Text('Постукивание на время', style: TextStyle(fontSize: 24)),
+          subtitle: Text(
+              'Тест на время постукиваний по экрану правой и левой рукой',
+              style: TextStyle(fontSize: 16)),
+          trailing: Icon(Icons.arrow_forward, size: 44),
           isThreeLine: true,
           onTap: () => Navigator.of(context).push(MaterialPageRoute(
-              builder: (context) => TestScreen(name: 'Постукивание'))),
+              builder: (context) => TappingTestScreen(milliseconds: 5000))),
         ),
         ListTile(
           leading: Icon(Icons.line_style, size: 44.0),
-          title: Text('Текст', style: TextStyle(fontSize: 24)),
+          title: Text('Набрать текст', style: TextStyle(fontSize: 24)),
           subtitle: Text(
-              'Тест скорость и точность печати текста на клавиатуре телефона',
+              'Тест на скорость и точность печати представленного текста',
               style: TextStyle(fontSize: 16)),
-          trailing: Icon(Icons.arrow_right, size: 44),
-          onTap: () => Navigator.of(context).push(MaterialPageRoute(
-              builder: (context) => TestScreen(name: 'Текст'))),
+          trailing: Icon(Icons.arrow_forward, size: 44),
+          onTap: () => Navigator.of(context)
+              .push(MaterialPageRoute(builder: (context) => TextTestScreen())),
+        ),
+        ListTile(
+          leading: Icon(Icons.circle, size: 44.0),
+          title: Text('Фигура', style: TextStyle(fontSize: 24)),
+          subtitle: Text('Необходимо обвести изображённую на экране фигуру',
+              style: TextStyle(fontSize: 16)),
+          trailing: Icon(Icons.arrow_forward, size: 44),
+          isThreeLine: true,
+          onTap: () => Navigator.of(context)
+              .push(MaterialPageRoute(builder: (context) => DrawTestScreen())),
+        ),
+        ListTile(
+          leading: Icon(Icons.mic, size: 44.0),
+          title: Text('Голос', style: TextStyle(fontSize: 24)),
+          subtitle: Text('Опишите голосом Ваше самочувствие',
+              style: TextStyle(fontSize: 16)),
+          trailing: Icon(Icons.arrow_forward, size: 44),
+          isThreeLine: true,
+          onTap: () => Navigator.of(context)
+              .push(MaterialPageRoute(builder: (context) => VoiceTestScreen())),
         ),
       ],
     );

@@ -1,6 +1,9 @@
 import 'dart:convert';
 
 import 'package:intl/intl.dart';
+import 'package:my_app/vkr/models/person.dart';
+import 'package:my_app/vkr/models/requests.dart';
+import 'package:my_app/vkr/screens/_requestSend.dart';
 import 'package:numberpicker/numberpicker.dart';
 import 'package:flutter_blue/flutter_blue.dart';
 import 'package:flutter/material.dart';
@@ -59,21 +62,57 @@ class _BluetoothDeviceScreenState extends State<BluetoothDeviceScreen> {
                   "Отсек '${convertIndexToSector(0)}'",
                   "Лекарства приняты",
                 );
+                Requests.send(new Request(
+                  map: {
+                    'phone': Person.phone ?? '',
+                    'automated': 'true',
+                    'sector': convertIndexToSector(0),
+                    'date': DateTime.now().toUtc().toString(),
+                  },
+                  path: 'medicine/phone',
+                ));
               } else if (string.startsWith("h1")) {
                 Notifications.fire(
                   "Отсек '${convertIndexToSector(1)}'",
                   "Лекарства приняты",
                 );
+                Requests.send(new Request(
+                  map: {
+                    'phone': Person.phone ?? '',
+                    'automated': 'true',
+                    'sector': convertIndexToSector(1),
+                    'date': DateTime.now().toUtc().toString(),
+                  },
+                  path: 'medicine/phone',
+                ));
               } else if (string.startsWith("h2")) {
                 Notifications.fire(
                   "Отсек '${convertIndexToSector(2)}'",
                   "Лекарства приняты",
                 );
+                Requests.send(new Request(
+                  map: {
+                    'phone': Person.phone ?? '',
+                    'automated': 'true',
+                    'sector': convertIndexToSector(2),
+                    'date': DateTime.now().toUtc().toString(),
+                  },
+                  path: 'medicine/phone',
+                ));
               } else if (string.startsWith("h3")) {
                 Notifications.fire(
                   "Отсек '${convertIndexToSector(3)}'",
                   "Лекарства приняты",
                 );
+                Requests.send(new Request(
+                  map: {
+                    'phone': Person.phone ?? '',
+                    'automated': 'true',
+                    'sector': convertIndexToSector(3),
+                    'date': DateTime.now().toUtc().toString(),
+                  },
+                  path: 'medicine/phone',
+                ));
               } else if (string == "h1" || string == "h1\n") {
                 setState(() {
                   Bluetooth.hallEffect = true;
@@ -115,8 +154,8 @@ class _BluetoothDeviceScreenState extends State<BluetoothDeviceScreen> {
         List<BluetoothDevice> devices =
             await FlutterBlue.instance.connectedDevices;
         for (BluetoothDevice d in devices) {
-          if (d.name == "HMSoft" && Bluetooth.result == null) {
-            Bluetooth.result = ScanResult(device: d, rssi: 0);
+          if (d.name == "HMSoft" && Bluetooth.device == null) {
+            Bluetooth.device = d;
             FlutterBlue.instance.stopScan();
 
             print("Already connected!");
@@ -129,8 +168,8 @@ class _BluetoothDeviceScreenState extends State<BluetoothDeviceScreen> {
       FlutterBlue.instance.startScan(timeout: Duration(seconds: 1));
       FlutterBlue.instance.scanResults.listen((results) {
         for (ScanResult r in results) {
-          if (r.device.name == "HMSoft" && Bluetooth.result == null) {
-            Bluetooth.result = r;
+          if (r.device.name == "HMSoft" && Bluetooth.device == null) {
+            Bluetooth.device = r.device;
             FlutterBlue.instance.stopScan();
 
             print('${r.device.name} found! rssi: ${r.rssi}');
@@ -147,8 +186,8 @@ class _BluetoothDeviceScreenState extends State<BluetoothDeviceScreen> {
     super.dispose();
 
     if (!Bluetooth.connected) {
-      if (Bluetooth.result != null) Bluetooth.result!.device.disconnect();
-      Bluetooth.result = null;
+      if (Bluetooth.device != null) Bluetooth.device!.disconnect();
+      Bluetooth.device = null;
       Bluetooth.service = null;
       Bluetooth.characteristic = null;
       Bluetooth.connected = false;
@@ -167,7 +206,7 @@ class _BluetoothDeviceScreenState extends State<BluetoothDeviceScreen> {
           if (snapshot.data!) {
             return CircularProgressIndicator();
           } else {
-            return Bluetooth.result == null
+            return Bluetooth.device == null
                 ? Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
@@ -194,7 +233,7 @@ class _BluetoothDeviceScreenState extends State<BluetoothDeviceScreen> {
     } else
       return Center(
         child: StreamBuilder<BluetoothDeviceState>(
-          stream: Bluetooth.result!.device.state,
+          stream: Bluetooth.device!.state,
           initialData: BluetoothDeviceState.connecting,
           builder: (c, snapshot) {
             switch (snapshot.data) {
@@ -203,8 +242,7 @@ class _BluetoothDeviceScreenState extends State<BluetoothDeviceScreen> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text('Подключено к HM-10!'),
-                    Text('Имя: ${Bluetooth.result!.device.name}'),
-                    Text('RSSI: ${Bluetooth.result!.rssi}'),
+                    Text('Имя: ${Bluetooth.device!.name}'),
                     SizedBox(height: 6),
                     Text("Отсек ${Bluetooth.hallEffect ? 'открыт' : 'закрыт'}"),
                     ElevatedButton(
@@ -228,7 +266,7 @@ class _BluetoothDeviceScreenState extends State<BluetoothDeviceScreen> {
               case BluetoothDeviceState.connecting:
                 return CircularProgressIndicator();
               default:
-                Bluetooth.result = null;
+                Bluetooth.device = null;
                 Bluetooth.service = null;
                 Bluetooth.characteristic = null;
                 Bluetooth.connected = false;

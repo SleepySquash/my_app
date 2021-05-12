@@ -39,3 +39,11 @@ app.*.symbols
 
 # Obfuscation related
 app.*.map.json
+
+# node
+node_modules/
+.env
+cert.pem
+key.pem
+server/public/voice
+server/uploads

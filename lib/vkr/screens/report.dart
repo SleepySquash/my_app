@@ -1,10 +1,12 @@
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
+import 'package:my_app/vkr/models/mail.dart';
+import 'package:my_app/vkr/models/person.dart';
+import 'package:my_app/vkr/screens/data.dart';
 import 'package:my_app/vkr/ui/awesomeDialog.dart';
-
 import 'package:my_app/vkr/ui/button.dart';
+import 'package:my_app/vkr/screens/_requestSend.dart';
 
 class ReportAppBar extends StatelessWidget implements PreferredSizeWidget {
   @override
@@ -15,6 +17,18 @@ class ReportAppBar extends StatelessWidget implements PreferredSizeWidget {
     return AppBar(
       backgroundColor: ReportScreen.color,
       title: Text('Отчёт'),
+      actions: [
+        IconButton(
+          icon: Icon(
+            Icons.web,
+            color: Colors.white,
+          ),
+          onPressed: () {
+            Navigator.of(context)
+                .push(MaterialPageRoute(builder: (context) => DataScreen()));
+          },
+        ),
+      ],
     );
   }
 }
@@ -29,21 +43,29 @@ class ReportScreen extends StatefulWidget {
 class _ReportScreenState extends State<ReportScreen> {
   void _diskineiaPopup(BuildContext context) {
     _whenPopup(context, 'Когда Вы испытали дискинезию?', (DateTime when) {
-      awesomeDialogError(
+      sendRequestPopup(
         context,
-        'Ошибка',
-        'Отправка состояния пока что не поддерживается: $when',
+        map: {
+          'phone': Person.phone ?? '',
+          'date': when.toUtc().toString(),
+        },
+        path: 'dyskinesia/phone',
       );
+      Mails.add(MailNode(flag: 'D', date: when.toUtc()));
     });
   }
 
   void _medicinePopup(BuildContext context) {
     _whenPopup(context, 'Когда Вы приняли лекарства?', (DateTime when) {
-      awesomeDialogError(
+      sendRequestPopup(
         context,
-        'Ошибка',
-        'Отправка состояния пока что не поддерживается: $when',
+        map: {
+          'phone': Person.phone ?? '',
+          'date': when.toUtc().toString(),
+        },
+        path: 'medicine/phone',
       );
+      Mails.add(MailNode(flag: 'X', date: when.toUtc()));
     });
   }
 
@@ -318,11 +340,16 @@ class _ReportScreenState extends State<ReportScreen> {
             color: Colors.green,
             text: 'Хорошо',
             tapCallback: () {
-              awesomeDialogError(
+              sendRequestPopup(
                 context,
-                'Ошибка',
-                'Отправка состояния пока что не поддерживается',
+                map: {
+                  'phone': Person.phone ?? '',
+                  'state': '+',
+                  'date': DateTime.now().toUtc().toString(),
+                },
+                path: 'conditions/phone',
               );
+              Mails.add(MailNode(flag: '+', date: DateTime.now().toUtc()));
             },
           ),
           SizedBox(height: 6),
@@ -330,11 +357,16 @@ class _ReportScreenState extends State<ReportScreen> {
             color: Colors.blue,
             text: 'Нормально',
             tapCallback: () {
-              awesomeDialogError(
+              sendRequestPopup(
                 context,
-                'Ошибка',
-                'Отправка состояния пока что не поддерживается',
+                map: {
+                  'phone': Person.phone ?? '',
+                  'state': '~',
+                  'date': DateTime.now().toUtc().toString(),
+                },
+                path: 'conditions/phone',
               );
+              Mails.add(MailNode(flag: '~', date: DateTime.now().toUtc()));
             },
           ),
           SizedBox(height: 6),
@@ -342,11 +374,16 @@ class _ReportScreenState extends State<ReportScreen> {
             color: Colors.red,
             text: 'Плохо',
             tapCallback: () {
-              awesomeDialogError(
+              sendRequestPopup(
                 context,
-                'Ошибка',
-                'Отправка состояния пока что не поддерживается',
+                map: {
+                  'phone': Person.phone ?? '',
+                  'state': '-',
+                  'date': DateTime.now().toUtc().toString(),
+                },
+                path: 'conditions/phone',
               );
+              Mails.add(MailNode(flag: '-', date: DateTime.now().toUtc()));
             },
           ),
           SizedBox(height: 12),
@@ -357,11 +394,15 @@ class _ReportScreenState extends State<ReportScreen> {
             tapCallback: () {
               awesomeDialogQuestion(
                   context, 'Лекарства', 'Вы приняли лекарства сейчас?', () {
-                awesomeDialogError(
+                sendRequestPopup(
                   context,
-                  'Ошибка',
-                  'Отправка состояния пока что не поддерживается',
+                  map: {
+                    'phone': Person.phone ?? '',
+                    'date': DateTime.now().toUtc().toString(),
+                  },
+                  path: 'medicine/phone',
                 );
+                Mails.add(MailNode(flag: 'X', date: DateTime.now().toUtc()));
               }, onClose: () {
                 _medicinePopup(context);
               });
@@ -379,11 +420,15 @@ class _ReportScreenState extends State<ReportScreen> {
             tapCallback: () {
               awesomeDialogQuestion(
                   context, 'Дискинезия', 'Вы испытали дискинезию сейчас?', () {
-                awesomeDialogError(
+                sendRequestPopup(
                   context,
-                  'Ошибка',
-                  'Отправка состояния пока что не поддерживается',
+                  map: {
+                    'phone': Person.phone ?? '',
+                    'date': DateTime.now().toUtc().toString(),
+                  },
+                  path: 'dyskinesia/phone',
                 );
+                Mails.add(MailNode(flag: 'D', date: DateTime.now().toUtc()));
               }, onClose: () {
                 _diskineiaPopup(context);
               });
