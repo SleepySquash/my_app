@@ -1,6 +1,6 @@
-# my_app
+# Parkinson
 
-A new Flutter project.
+Monitoring application for Parkinson pacients.
 
 ## Getting Started
 

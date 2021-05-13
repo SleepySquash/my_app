@@ -1,6 +1,6 @@
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter/material.dart';
-import 'package:my_app/vkr/models/requests.dart';
+import 'package:parkinson/vkr/models/requests.dart';
 
 void sendRequestPopup(BuildContext context,
     {Map<String, String>? map,

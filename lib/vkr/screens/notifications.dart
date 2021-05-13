@@ -1,11 +1,12 @@
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:my_app/vkr/models/events.dart';
-import 'package:my_app/vkr/ui/awesomeDialog.dart';
+import 'package:parkinson/vkr/models/events.dart';
+import 'package:parkinson/vkr/models/placeNotifications.dart';
+import 'package:parkinson/vkr/ui/awesomeDialog.dart';
 import 'package:numberpicker/numberpicker.dart';
 
-import 'package:my_app/vkr/models/bluetooth.dart';
+import 'package:parkinson/vkr/models/bluetooth.dart';
 import 'bluetooth.dart';
 
 class NotificationsAppBar extends StatelessWidget
@@ -70,7 +71,8 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
                                 Bluetooth.events.remove(e);
                               });
                               Bluetooth.saveToPrefs();
-                              sendBluetoothEvents();
+                              placeNotifications();
+                              Bluetooth.sendBluetoothEvents();
                             },
                           );
                         },
@@ -82,14 +84,25 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
                         .map(
                           (e) => ListTile(
                             title: Text(
-                                e.type == MyEventType.report
-                                    ? 'Проверка состояния'
-                                    : (e.type == MyEventType.tests
-                                        ? 'Выполнить тесты'
-                                        : (e.type == MyEventType.doctor
-                                            ? 'Посещение врача'
-                                            : 'Событие')),
-                                style: TextStyle(fontSize: 20)),
+                              e.type == MyEventType.report
+                                  ? 'Проверка состояния'
+                                  : (e.type == MyEventType.tests
+                                      ? 'Выполнить тесты'
+                                      : (e.type == MyEventType.doctor
+                                          ? 'Посещение врача'
+                                          : 'Событие')),
+                              style: TextStyle(
+                                fontSize: 20,
+                                color: (e.type == MyEventType.doctor
+                                    ? (DateTime.now()
+                                                .difference(e.time!)
+                                                .inMinutes >=
+                                            0
+                                        ? Colors.red
+                                        : Colors.black)
+                                    : Colors.black),
+                              ),
+                            ),
                             subtitle: Text(
                                 e.type == MyEventType.report
                                     ? 'Каждый день в ${DateFormat("Hm").format(e.time!)}'
@@ -122,6 +135,7 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
                                       Events.events.remove(e);
                                     });
                                     Events.saveToPrefs();
+                                    placeNotifications();
                                   },
                                 );
                               },
@@ -527,21 +541,25 @@ class _EventSelectorState extends State<EventSelector> {
                   ),
                 );
                 Bluetooth.saveToPrefs();
-                sendBluetoothEvents();
+                Bluetooth.sendBluetoothEvents();
+                placeNotifications();
               } else if (dropdownValue == 'Проверка состояния') {
                 Events.events
                     .add(MyEvent(type: MyEventType.report, time: reportTime));
                 Events.saveToPrefs();
+                placeNotifications();
               } else if (dropdownValue == 'Выполнить тесты') {
                 Events.events
                     .add(MyEvent(type: MyEventType.tests, time: testsTime));
                 Events.saveToPrefs();
+                placeNotifications();
               } else if (dropdownValue == 'Посещение врача') {
                 Events.events.add(MyEvent(
                     type: MyEventType.doctor,
                     time: doctorTime,
                     remind: doctorRemind));
                 Events.saveToPrefs();
+                placeNotifications();
               }
               widget.onClose!();
             }

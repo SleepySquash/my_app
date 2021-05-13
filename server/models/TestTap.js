@@ -7,11 +7,13 @@ const testTapSchema = new Schema({
     count: { type: Number },
     accuracy: { type: Schema.Types.Decimal128 },
     duration: { type: Number },
+    times: [Schema.Types.Decimal128]
   },
   right: {
     count: { type: Number },
     accuracy: { type: Schema.Types.Decimal128 },
     duration: { type: Number },
+    times: [Schema.Types.Decimal128]
   },
   date: { type: Date, default: Date.now },
 })

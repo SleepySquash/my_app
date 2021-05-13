@@ -1,18 +1,20 @@
+import 'dart:async';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:parkinson/vkr/models/person.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:connectivity/connectivity.dart';
 import 'dart:convert';
 
-import 'package:my_app/vkr/models/person.dart' as models;
-import 'package:my_app/vkr/screens/home.dart';
-import 'package:my_app/vkr/screens/login.dart';
+import 'package:parkinson/vkr/models/person.dart' as models;
+import 'package:parkinson/vkr/screens/home.dart';
+import 'package:parkinson/vkr/screens/login.dart';
 
-import 'package:my_app/vkr/models/notifications.dart';
-import 'package:my_app/vkr/models/bluetooth.dart';
-import 'package:my_app/vkr/models/events.dart';
-import 'package:my_app/vkr/models/requests.dart';
+import 'package:parkinson/vkr/models/notifications.dart';
+import 'package:parkinson/vkr/models/bluetooth.dart';
+import 'package:parkinson/vkr/models/events.dart';
+import 'package:parkinson/vkr/models/requests.dart';
 
 import 'models/mail.dart';
 
@@ -28,12 +30,23 @@ class MyHttpOverrides extends HttpOverrides {
 void myMain() async {
   HttpOverrides.global = new MyHttpOverrides();
   WidgetsFlutterBinding.ensureInitialized();
+  await Person.loadFromPrefs();
   Notifications.init();
   Bluetooth.loadFromPrefs();
   Events.loadFromPrefs();
   RequestPreferences.loadFromPrefs();
+  Requests.checkConnection();
   Requests.loadFromPrefs();
   Mails.loadFromPrefs();
+  Bluetooth.searchAndConnect();
+
+  Timer.periodic(Duration(minutes: 2), (t) {
+    if (Requests.connected) {
+      Requests.trySending();
+      Mails.trySending();
+    }
+  });
+
   runApp(MyApp());
 }
 
@@ -45,20 +58,9 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   var subscription;
 
-  void load() async {
-    SharedPreferences preferences = await SharedPreferences.getInstance();
-    var string = preferences.getString('person');
-    if (string != null) {
-      Map map = json.decode(string);
-      models.Person.fromJson(map);
-    }
-    setState(() {});
-  }
-
   @override
   void initState() {
     super.initState();
-    load();
 
     subscription = Connectivity()
         .onConnectivityChanged

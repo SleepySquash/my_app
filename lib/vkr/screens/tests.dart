@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:my_app/vkr/screens/tests/draw.dart';
-import 'package:my_app/vkr/screens/tests/reporting.dart';
-import 'package:my_app/vkr/screens/tests/tapping.dart';
-import 'package:my_app/vkr/screens/tests/textrepeat.dart';
-import 'package:my_app/vkr/screens/tests/voice.dart';
+import 'package:parkinson/vkr/screens/tests/draw.dart';
+import 'package:parkinson/vkr/screens/tests/reporting.dart';
+import 'package:parkinson/vkr/screens/tests/tapping.dart';
+import 'package:parkinson/vkr/screens/tests/textrepeat.dart';
+import 'package:parkinson/vkr/screens/tests/voice.dart';
 
 class TestsAppBar extends StatelessWidget implements PreferredSizeWidget {
   @override

@@ -1,12 +1,12 @@
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:my_app/vkr/models/mail.dart';
-import 'package:my_app/vkr/models/person.dart';
-import 'package:my_app/vkr/screens/data.dart';
-import 'package:my_app/vkr/ui/awesomeDialog.dart';
-import 'package:my_app/vkr/ui/button.dart';
-import 'package:my_app/vkr/screens/_requestSend.dart';
+import 'package:parkinson/vkr/models/mail.dart';
+import 'package:parkinson/vkr/models/person.dart';
+import 'package:parkinson/vkr/screens/data.dart';
+import 'package:parkinson/vkr/ui/awesomeDialog.dart';
+import 'package:parkinson/vkr/ui/button.dart';
+import 'package:parkinson/vkr/screens/_requestSend.dart';
 
 class ReportAppBar extends StatelessWidget implements PreferredSizeWidget {
   @override
@@ -51,7 +51,7 @@ class _ReportScreenState extends State<ReportScreen> {
         },
         path: 'dyskinesia/phone',
       );
-      Mails.add(MailNode(flag: 'D', date: when.toUtc()));
+      Mails.add(MailNode(flag: 'D', date: when));
     });
   }
 
@@ -65,7 +65,7 @@ class _ReportScreenState extends State<ReportScreen> {
         },
         path: 'medicine/phone',
       );
-      Mails.add(MailNode(flag: 'X', date: when.toUtc()));
+      Mails.add(MailNode(flag: 'X', date: when));
     });
   }
 
@@ -349,7 +349,7 @@ class _ReportScreenState extends State<ReportScreen> {
                 },
                 path: 'conditions/phone',
               );
-              Mails.add(MailNode(flag: '+', date: DateTime.now().toUtc()));
+              Mails.add(MailNode(flag: '+', date: DateTime.now()));
             },
           ),
           SizedBox(height: 6),
@@ -366,7 +366,7 @@ class _ReportScreenState extends State<ReportScreen> {
                 },
                 path: 'conditions/phone',
               );
-              Mails.add(MailNode(flag: '~', date: DateTime.now().toUtc()));
+              Mails.add(MailNode(flag: '~', date: DateTime.now()));
             },
           ),
           SizedBox(height: 6),
@@ -383,7 +383,7 @@ class _ReportScreenState extends State<ReportScreen> {
                 },
                 path: 'conditions/phone',
               );
-              Mails.add(MailNode(flag: '-', date: DateTime.now().toUtc()));
+              Mails.add(MailNode(flag: '-', date: DateTime.now()));
             },
           ),
           SizedBox(height: 12),
@@ -402,7 +402,7 @@ class _ReportScreenState extends State<ReportScreen> {
                   },
                   path: 'medicine/phone',
                 );
-                Mails.add(MailNode(flag: 'X', date: DateTime.now().toUtc()));
+                Mails.add(MailNode(flag: 'X', date: DateTime.now()));
               }, onClose: () {
                 _medicinePopup(context);
               });
@@ -428,7 +428,7 @@ class _ReportScreenState extends State<ReportScreen> {
                   },
                   path: 'dyskinesia/phone',
                 );
-                Mails.add(MailNode(flag: 'D', date: DateTime.now().toUtc()));
+                Mails.add(MailNode(flag: 'D', date: DateTime.now()));
               }, onClose: () {
                 _diskineiaPopup(context);
               });

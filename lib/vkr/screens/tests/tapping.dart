@@ -4,9 +4,9 @@ import 'dart:core';
 
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter/material.dart';
-import 'package:my_app/vkr/models/person.dart';
-import 'package:my_app/vkr/screens/_requestSend.dart';
-import 'package:my_app/vkr/ui/awesomeDialog.dart';
+import 'package:parkinson/vkr/models/person.dart';
+import 'package:parkinson/vkr/screens/_requestSend.dart';
+import 'package:parkinson/vkr/ui/awesomeDialog.dart';
 
 import '_common.dart';
 
@@ -23,6 +23,7 @@ class TappingTestScreen extends StatefulWidget {
 class TappingNode {
   final double accuracy;
   final bool leftHand;
+  final DateTime when = DateTime.now();
   TappingNode(this.accuracy, this.leftHand);
 }
 
@@ -32,6 +33,7 @@ class _TappingTestScreenState extends State<TappingTestScreen> {
   List<TappingNode> nodes = [];
 
   bool counting = false;
+  DateTime? lastPress;
   DateTime startTime = DateTime.now();
   Duration leftDuration = Duration(), rightDuration = Duration();
   int milliseconds = 0;
@@ -113,18 +115,66 @@ class _TappingTestScreenState extends State<TappingTestScreen> {
     if (l != 0) leftAccuracy /= l;
     if (r != 0) rightAccuracy /= r;
 
+    List<double> leftTimes = [];
+    for (int i = 0; i < nodes.length; i++) {
+      if (!nodes[i].leftHand) break;
+      if (i == 0)
+        leftTimes.add(0);
+      else
+        leftTimes.add(nodes[i]
+                .when
+                .difference(nodes[i - 1].when)
+                .inMicroseconds
+                .toDouble() /
+            1000000);
+    }
+
+    List<double> rightTimes = [];
+    for (int i = 0; i < nodes.length; i++) {
+      if (nodes[i].leftHand) continue;
+      if (i == 0 || nodes[i - 1].leftHand)
+        rightTimes.add(0);
+      else
+        rightTimes.add(nodes[i]
+                .when
+                .difference(nodes[i - 1].when)
+                .inMicroseconds
+                .toDouble() /
+            1000000);
+    }
+
+    var map = {
+      'phone': Person.phone ?? '',
+      'left': {
+        '\"count\"': '$leftCount',
+        '\"accuracy\"': '$leftAccuracy',
+        '\"duration\"': '${leftDuration.inMilliseconds}',
+        '\"times\"': '${leftTimes.toString()}'
+      }.toString(),
+      'right': {
+        '\"count\"': '$rightCount',
+        '\"accuracy\"': '$rightAccuracy',
+        '\"duration\"': '${rightDuration.inMilliseconds}',
+        '\"times\"': '${rightTimes.toString()}'
+      }.toString(),
+      'date': DateTime.now().toUtc().toString(),
+    };
+    print(map);
+
     sendRequestPopup(context,
         map: {
           'phone': Person.phone ?? '',
           'left': {
             '\"count\"': '$leftCount',
             '\"accuracy\"': '$leftAccuracy',
-            '\"duration\"': '${leftDuration.inMilliseconds}'
+            '\"duration\"': '${leftDuration.inMilliseconds}',
+            '\"times\"': '${leftTimes.toString()}'
           }.toString(),
           'right': {
             '\"count\"': '$rightCount',
             '\"accuracy\"': '$rightAccuracy',
-            '\"duration\"': '${rightDuration.inMilliseconds}'
+            '\"duration\"': '${rightDuration.inMilliseconds}',
+            '\"times\"': '${rightTimes.toString()}'
           }.toString(),
           'date': DateTime.now().toUtc().toString(),
         },

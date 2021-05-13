@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
-import 'package:my_app/vkr/models/person.dart';
+import 'package:parkinson/vkr/models/person.dart';
 
 class ProfileAppBar extends StatelessWidget implements PreferredSizeWidget {
   @override
@@ -31,16 +31,76 @@ class ProfileScreen extends StatelessWidget {
           Expanded(
             child: Container(
               padding: EdgeInsets.all(30),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
+              child: ListView(
                 children: [
                   TextFormField(
-                    keyboardType: TextInputType.name,
+                    keyboardType: TextInputType.phone,
                     initialValue: Person.phone,
+                    onChanged: (s) {
+                      if (int.parse(s).toString() == s &&
+                          s.length >= 11 &&
+                          s.length <= 20) {
+                        Person.saveToPrefs();
+                      }
+                    },
                     decoration: InputDecoration(
                       icon: Icon(Icons.phone),
                       labelText: 'Телефон',
                       hintText: 'Телефон',
+                      border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(32)),
+                    ),
+                  ),
+                  SizedBox(height: 10),
+                  TextFormField(
+                    keyboardType: TextInputType.name,
+                    initialValue: Person.lName,
+                    onChanged: (s) {
+                      if (s.length > 0) {
+                        Person.lName = s;
+                        Person.saveToPrefs();
+                      }
+                    },
+                    decoration: InputDecoration(
+                      icon: Icon(Icons.person),
+                      labelText: 'Фамилия',
+                      hintText: 'Фамилия',
+                      border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(32)),
+                    ),
+                  ),
+                  SizedBox(height: 10),
+                  TextFormField(
+                    keyboardType: TextInputType.name,
+                    initialValue: Person.fName,
+                    onChanged: (s) {
+                      if (s.length > 0) {
+                        Person.fName = s;
+                        Person.saveToPrefs();
+                      }
+                    },
+                    decoration: InputDecoration(
+                      icon: Icon(Icons.person),
+                      labelText: 'Имя',
+                      hintText: 'Имя',
+                      border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(32)),
+                    ),
+                  ),
+                  SizedBox(height: 10),
+                  TextFormField(
+                    keyboardType: TextInputType.name,
+                    initialValue: Person.mName,
+                    onChanged: (s) {
+                      if (s.length > 0) {
+                        Person.mName = s;
+                        Person.saveToPrefs();
+                      }
+                    },
+                    decoration: InputDecoration(
+                      icon: Icon(Icons.person),
+                      labelText: 'Отчество',
+                      hintText: 'Отчество',
                       border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(32)),
                     ),

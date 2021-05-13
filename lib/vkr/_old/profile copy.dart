@@ -1,7 +1,7 @@
 /*import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
-import 'package:my_app/vkr/models/person.dart';
+import 'package:parkinson/vkr/models/person.dart';
 
 class ProfileAppBar extends StatelessWidget implements PreferredSizeWidget {
   @override

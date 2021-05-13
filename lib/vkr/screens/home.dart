@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:my_app/vkr/models/person.dart';
+import 'package:parkinson/vkr/models/person.dart';
 
 import 'doctor.dart';
 import 'profile.dart';

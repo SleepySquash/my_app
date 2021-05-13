@@ -5,7 +5,7 @@ import 'package:intl/intl.dart';
 import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import 'package:my_app/vkr/models/person.dart';
+import 'package:parkinson/vkr/models/person.dart';
 
 class LoginScreen extends StatefulWidget {
   @override

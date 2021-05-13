@@ -7,7 +7,7 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_blue/flutter_blue.dart';
-import 'package:my_app/ble_1/widgets.dart';
+import 'package:parkinson/ble_1/widgets.dart';
 
 void myMain() {
   runApp(FlutterBlueApp());

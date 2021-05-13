@@ -1,7 +1,7 @@
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter/material.dart';
-import 'package:my_app/vkr/models/person.dart';
-import 'package:my_app/vkr/screens/_requestSend.dart';
+import 'package:parkinson/vkr/models/person.dart';
+import 'package:parkinson/vkr/screens/_requestSend.dart';
 import 'package:string_similarity/string_similarity.dart';
 
 import '_common.dart';

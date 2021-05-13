@@ -2,7 +2,7 @@ import 'dart:io';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'package:my_app/vkr/models/person.dart';
+import 'package:parkinson/vkr/models/person.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:connectivity/connectivity.dart';
 import 'package:http/http.dart' as http;
@@ -137,11 +137,14 @@ class Requests {
     return null;
   }
 
-  static void trySending() async {
+  static void checkConnection() async {
     var connectivityResult = await (Connectivity().checkConnectivity());
     connected = connectivityResult == ConnectivityResult.wifi ||
         (connectivityResult == ConnectivityResult.mobile &&
             RequestPreferences.allowMobile);
+  }
+
+  static void trySending() async {
     if (connected) {
       try {
         var response = await http.get(Uri.https(url, 'ping'));

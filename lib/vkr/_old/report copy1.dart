@@ -2,7 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-import 'package:my_app/vkr/ui/button.dart';
+import 'package:parkinson/vkr/ui/button.dart';
 
 class ReportAppBar extends StatelessWidget implements PreferredSizeWidget {
   @override

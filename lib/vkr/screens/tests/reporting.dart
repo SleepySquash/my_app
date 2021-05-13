@@ -1,8 +1,8 @@
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter/material.dart';
-import 'package:my_app/vkr/models/person.dart';
-import 'package:my_app/vkr/screens/_requestSend.dart';
-import 'package:my_app/vkr/ui/awesomeDialog.dart';
+import 'package:parkinson/vkr/models/person.dart';
+import 'package:parkinson/vkr/screens/_requestSend.dart';
+import 'package:parkinson/vkr/ui/awesomeDialog.dart';
 
 import '_common.dart';
 
@@ -97,7 +97,8 @@ class _ReportTestScreenState extends State<ReportTestScreen> {
                   } else {
                     if (s.length > lastString.length) {
                       for (int i = lastString.length; i < s.length; i++) {
-                        String pair = '${s[i - 1]}${s[i]}';
+                        String pair =
+                            '${s[i - 1] == '\n' ? '^' : (s[i - 1] == ' ' ? '_' : s[i - 1])}${s[i] == '\n' ? '^' : (s[i] == ' ' ? '_' : s[i])}';
                         keys.add(KeyNode(
                             pair,
                             DateTime.now()

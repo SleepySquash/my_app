@@ -3,9 +3,9 @@ import 'dart:ui';
 
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter/material.dart';
-import 'package:my_app/vkr/models/person.dart';
-import 'package:my_app/vkr/screens/_requestSend.dart';
-import 'package:my_app/vkr/ui/awesomeDialog.dart';
+import 'package:parkinson/vkr/models/person.dart';
+import 'package:parkinson/vkr/screens/_requestSend.dart';
+import 'package:parkinson/vkr/ui/awesomeDialog.dart';
 
 import '_common.dart';
 

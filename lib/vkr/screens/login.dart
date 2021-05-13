@@ -5,7 +5,7 @@ import 'package:intl/intl.dart';
 import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import 'package:my_app/vkr/models/person.dart';
+import 'package:parkinson/vkr/models/person.dart';
 
 class LoginScreen extends StatefulWidget {
   @override
@@ -13,16 +13,11 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  String? firstname, lastname, number;
-  DateTime? bday;
-
-  TextEditingController fnameController = TextEditingController();
-  TextEditingController lnameController = TextEditingController();
-  TextEditingController phoneController = TextEditingController();
+  String? fName, lName, mName, phone;
 
   bool fnameValidated = false,
       lnameValidated = false,
-      dateValidated = false,
+      mnameValidated = false,
       phoneValidated = false;
 
   @override
@@ -37,21 +32,27 @@ class _LoginScreenState extends State<LoginScreen> {
     return Scaffold(
       body: Center(
         child: Container(
-          padding: EdgeInsets.all(80),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
+          padding: EdgeInsets.all(4.0),
+          child: ListView(
             children: [
-              Text('Профиль', style: Theme.of(context).textTheme.headline4),
+              Text(
+                'Профиль',
+                style: Theme.of(context).textTheme.headline4,
+                textAlign: TextAlign.center,
+              ),
               SizedBox(height: 6),
-              Text('Заполните, пожалуйста, Ваши данные',
-                  style: Theme.of(context).textTheme.subtitle1),
+              Text(
+                'Заполните, пожалуйста, Ваши данные',
+                style: Theme.of(context).textTheme.subtitle1,
+                textAlign: TextAlign.center,
+              ),
               SizedBox(height: 16),
               TextFormField(
                 keyboardType: TextInputType.phone,
-                controller: phoneController,
                 onChanged: (String text) {
                   setState(() {
                     phoneValidated = text.length == 11;
+                    phone = text;
                   });
                 },
                 decoration: InputDecoration(
@@ -61,20 +62,75 @@ class _LoginScreenState extends State<LoginScreen> {
                       borderRadius: BorderRadius.circular(32)),
                 ),
               ),
+              SizedBox(height: 10),
+              TextFormField(
+                onChanged: (String text) {
+                  setState(() {
+                    lnameValidated = text.length != 0;
+                    lName = text;
+                  });
+                },
+                textCapitalization: TextCapitalization.words,
+                decoration: InputDecoration(
+                  icon: Icon(Icons.person),
+                  hintText: 'Фамилия',
+                  border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(32)),
+                ),
+              ),
+              SizedBox(height: 10),
+              TextFormField(
+                onChanged: (String text) {
+                  setState(() {
+                    fnameValidated = text.length != 0;
+                    fName = text;
+                  });
+                },
+                textCapitalization: TextCapitalization.words,
+                decoration: InputDecoration(
+                  icon: Icon(Icons.person),
+                  hintText: 'Имя',
+                  border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(32)),
+                ),
+              ),
+              SizedBox(height: 10),
+              TextFormField(
+                onChanged: (String text) {
+                  setState(() {
+                    mnameValidated = text.length != 0;
+                    mName = text;
+                  });
+                },
+                textCapitalization: TextCapitalization.words,
+                decoration: InputDecoration(
+                  icon: Icon(Icons.person),
+                  hintText: 'Отчество',
+                  border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(32)),
+                ),
+              ),
               SizedBox(height: 24),
               Material(
                 elevation: 5,
-                color: (phoneValidated) ? Colors.blue : Colors.grey,
+                color: (phoneValidated &&
+                        fnameValidated &&
+                        mnameValidated &&
+                        lnameValidated)
+                    ? Colors.blue
+                    : Colors.grey,
                 borderRadius: BorderRadius.circular(32),
                 child: MaterialButton(
-                  onPressed: (phoneValidated)
+                  onPressed: (phoneValidated &&
+                          fnameValidated &&
+                          mnameValidated &&
+                          lnameValidated)
                       ? () async {
-                          SharedPreferences preferences =
-                              await SharedPreferences.getInstance();
-                          Person.phone = phoneController.text;
-                          var string = json.encode(Person.toJson());
-                          await preferences.setString('person', string);
-
+                          Person.phone = phone;
+                          Person.fName = fName;
+                          Person.mName = mName;
+                          Person.lName = lName;
+                          await Person.saveToPrefs();
                           Navigator.pushReplacementNamed(context, '/home');
                         }
                       : null,

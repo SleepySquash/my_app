@@ -45,7 +45,8 @@ class Notifications {
         onSelectNotification: null);
   }
 
-  static void fire(String title, String body, {String payload = ""}) async {
+  static Future<void> fire(String title, String body,
+      {String payload = ""}) async {
     const AndroidNotificationDetails androidPlatformChannelSpecifics =
         AndroidNotificationDetails(
             'your channel id', 'your channel name', 'your channel description',
@@ -58,14 +59,15 @@ class Notifications {
         .show(0, title, body, platformChannelSpecifics, payload: payload);
   }
 
-  static void schedule(String title, String body, DateTime when) async {
+  static Future<void> schedule(
+      int id, String title, String body, DateTime when) async {
     final timeZone = TimeZone();
     String timeZoneName = await timeZone.getTimeZoneName();
     final location = await timeZone.getLocation(timeZoneName);
     final scheduledDate = tz.TZDateTime.from(when, location);
 
     await flutterLocalNotificationsPlugin!.zonedSchedule(
-        0,
+        id,
         title,
         body,
         scheduledDate,
@@ -78,7 +80,27 @@ class Notifications {
             UILocalNotificationDateInterpretation.absoluteTime);
   }
 
-  static void cancelAll() {
-    flutterLocalNotificationsPlugin!.cancelAll();
+  static Future<void> once(
+      int id, String title, String body, DateTime when) async {
+    final timeZone = TimeZone();
+    String timeZoneName = await timeZone.getTimeZoneName();
+    final location = await timeZone.getLocation(timeZoneName);
+    final scheduledDate = tz.TZDateTime.from(when, location);
+
+    await flutterLocalNotificationsPlugin!.zonedSchedule(
+        id,
+        title,
+        body,
+        scheduledDate,
+        const NotificationDetails(
+            android: AndroidNotificationDetails('your channel id',
+                'your channel name', 'your channel description')),
+        androidAllowWhileIdle: true,
+        uiLocalNotificationDateInterpretation:
+            UILocalNotificationDateInterpretation.absoluteTime);
+  }
+
+  static Future<void> cancelAll() async {
+    await flutterLocalNotificationsPlugin!.cancelAll();
   }
 }
